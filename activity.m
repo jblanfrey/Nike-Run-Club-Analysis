@@ -4,41 +4,27 @@ classdef activity
     Figure
   end
   
+  properties
+    Filename
+  end
+  
   properties (Dependent)
     Latitude
     Longitude
     Elevation
     Summary
+    NickName
+    DurationMS
   end
   
   methods
     function act = activity(filename)
+      arguments
+        filename (1,1) string = "data/activity-20200623-072233.mat"
+      end
+      act.Filename = filename;
       Data = load(filename);
       act.Data = Data.data;
-    end
-    
-    function act = plotActivityMap(act)
-      act.Figure = figure;
-      act.Figure.MenuBar = 'none';
-      act.Figure.NumberTitle = 'off';
-      geoplot(act.Latitude, act.Longitude);
-      act.Figure.Name = act.Data.tags.com_nike_name;
-      
-      s = act.Summary;
-      t = milliseconds(act.Data.active_duration_ms);
-      t.Format="hh:mm:ss";
-      
-      title("Distance: " + s.value(s.metric=="distance") + " km - " + ...
-        "Average pace: " + s.value(s.metric=="pace") + " min/km - " + ...
-        "Time: " + string(t));
-    end
-    
-    function act = plotActivityMap3(act)
-      uif = uifigure;
-      g = geoglobe(uif);
-      p = geoplot3(g, act.Latitude, act.Longitude, act.Elevation+1);
-      p.Marker = 'o';
-      p.LineWidth = 5;
     end
     
     function value = get.Latitude(act)
@@ -59,6 +45,14 @@ classdef activity
       value.summary = categorical(value.summary);
       value.source = [];
       value.app_id = [];
+    end
+    
+    function value = get.NickName(act)
+      value = act.Data.tags.com_nike_name;
+    end
+    
+    function value = get.DurationMS(act)
+      value = act.Data.active_duration_ms;
     end
   end
   
