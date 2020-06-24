@@ -61,7 +61,11 @@ classdef activity
       try
         value = act.Data.tags.com_nike_name;
       catch
-        value = act.Data.tags.com_nike_running_goaltype;
+        try
+          value = act.Data.tags.com_nike_running_goaltype;
+        catch
+          value = act.Data.type;
+        end
       end
     end
     
