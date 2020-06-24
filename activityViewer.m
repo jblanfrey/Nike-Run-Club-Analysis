@@ -3,7 +3,7 @@ classdef activityViewer
     
   properties
     Activity
-    ActivityMapView
+    GeoplotAxis
   end
   
   methods
@@ -14,32 +14,8 @@ classdef activityViewer
       v.Activity = activity(filename);
     end
     
-%     function v = setActivity(filename)
-%       v.Activity = activity("data/" + filename);
-%       % send event to update plots
-%     end
-    
-    function v = plotActivityMap(v)
-      ActivityMapView.Figure = figure;
-      ActivityMapView.Figure.MenuBar = 'none';
-      ActivityMapView.Figure.NumberTitle = 'off';
-      
-      act = v.Activity;
-      geoplot(act.Latitude, act.Longitude);
-      ActivityMapView.Figure.Name = act.NickName + " - " + string(act.Date);
-      
-      s = act.Summary;
-      t = milliseconds(act.DurationMS);
-      t.Format="hh:mm:ss";
-      
-      pace = minutes(s.value(s.metric=="pace"));
-      pace.Format = "mm:ss";
-      
-      title("Distance: " + s.value(s.metric=="distance") + " km - " + ...
-        "Average pace: " + string(pace) + " min/km - " + ...
-        "Time: " + string(t));
-      
-      v.ActivityMapView = ActivityMapView;
+    function v = plotActivityMap(v, p)
+      v.GeoplotAxis = geoplot(v.Activity.Latitude, v.Activity.Longitude, "Parent", p);
     end
     
 %     function v = plotActivityMap3(v)
