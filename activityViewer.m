@@ -7,12 +7,17 @@ classdef activityViewer
   end
   
   methods
-    function v = activityViewer(act)
+    function v = activityViewer(filename)
       arguments
-        act (1,1) activity = activity("data/activity-20200623-072233.mat");
+        filename (1,1) string = "activity-20200623-072233.mat";
       end
-      v.Activity = act;
+      v.Activity = activity(filename);
     end
+    
+%     function v = setActivity(filename)
+%       v.Activity = activity("data/" + filename);
+%       % send event to update plots
+%     end
     
     function v = plotActivityMap(v)
       ActivityMapView.Figure = figure;
@@ -21,14 +26,17 @@ classdef activityViewer
       
       act = v.Activity;
       geoplot(act.Latitude, act.Longitude);
-      ActivityMapView.Figure.Name = act.NickName;
+      ActivityMapView.Figure.Name = act.NickName + " - " + string(act.Date);
       
       s = act.Summary;
       t = milliseconds(act.DurationMS);
       t.Format="hh:mm:ss";
       
+      pace = minutes(s.value(s.metric=="pace"));
+      pace.Format = "mm:ss";
+      
       title("Distance: " + s.value(s.metric=="distance") + " km - " + ...
-        "Average pace: " + s.value(s.metric=="pace") + " min/km - " + ...
+        "Average pace: " + string(pace) + " min/km - " + ...
         "Time: " + string(t));
       
       v.ActivityMapView = ActivityMapView;

@@ -1,7 +1,7 @@
 classdef activity
-  properties (Access = private)
+  properties %(Access = private)
     Data
-    Figure
+    Metrics
   end
   
   properties
@@ -15,28 +15,38 @@ classdef activity
     Summary
     NickName
     DurationMS
+    Date
   end
   
   methods
     function act = activity(filename)
       arguments
-        filename (1,1) string = "data/activity-20200623-072233.mat"
+        filename (1,1) string = "activity-20200623-072233.mat"
       end
       act.Filename = filename;
-      Data = load(filename);
+      Data = load("data/" + filename);
       act.Data = Data.data;
+      Metrics = struct2table(act.Data.metrics);
+      Metrics.type = categorical(Metrics.type);
+      Metrics.unit = categorical(Metrics.unit);
+      Metrics.source = [];
+      Metrics.appId = [];
+      act.Metrics = Metrics;
     end
     
     function value = get.Latitude(act)
-      value = [act.Data.metrics(10).values(:).value];
+      LatStruct = act.Metrics.values{act.Metrics.type=="latitude"};
+      value = [LatStruct(:).value];
     end
     
     function value = get.Longitude(act)
-      value = [act.Data.metrics(11).values(:).value];
+      LonStruct = act.Metrics.values{act.Metrics.type=="longitude"};
+      value = [LonStruct(:).value];
     end
     
     function value = get.Elevation(act)
-      value = [act.Data.metrics(7).values(:).value];
+      ElevStruct = act.Metrics.values{act.Metrics.type=="elevation"};
+      value = [ElevStruct(:).value];
     end
     
     function value = get.Summary(act)
@@ -48,7 +58,22 @@ classdef activity
     end
     
     function value = get.NickName(act)
-      value = act.Data.tags.com_nike_name;
+      try
+        value = act.Data.tags.com_nike_name;
+      catch
+        value = act.Data.tags.com_nike_running_goaltype;
+      end
+    end
+    
+    function value = get.Date(act)
+      Date = char(extractAfter(act.Filename, "activity-"));
+      value = datetime(...
+        str2num(Date(1:4)),...
+        str2num(Date(5:6)),...
+        str2num(Date(7:8)),...
+        str2num(Date(10:11)),...
+        str2num(Date(12:13)),...
+        str2num(Date(14:15)));
     end
     
     function value = get.DurationMS(act)
