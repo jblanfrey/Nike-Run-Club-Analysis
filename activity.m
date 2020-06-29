@@ -11,7 +11,7 @@ classdef activity < handle
   properties (Dependent, SetObservable)
     Filename
   end
-    
+  
   properties (Dependent)
     Latitude
     Longitude
@@ -28,8 +28,12 @@ classdef activity < handle
         filename (1,1) string = "";
       end
       if ~isempty(filename)
-        act.Filename_ = filename;
-        act.updateActivity(filename);
+        if exist("data/" + filename, "file")
+          act.updateActivity(filename);
+          act.Filename_ = filename;
+        else
+          error("File does not exist");
+        end
       end
     end
     
@@ -99,8 +103,12 @@ classdef activity < handle
     end
     
     function set.Filename(act, filename)
-      act.Filename_ = filename;
-      act.updateActivity(filename);
+      if exist("data/" + filename, "file")
+        act.updateActivity(filename);
+        act.Filename_ = filename;
+      else
+        error("File does not exist");
+      end
     end
   end
 end
