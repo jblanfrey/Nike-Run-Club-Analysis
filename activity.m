@@ -1,13 +1,17 @@
 classdef activity < handle
-  properties %(Access = private)
+  properties (Access = private)
     Data
     Metrics
   end
   
-  properties (SetObservable)
-    Filename
+  properties (Access = private)
+    Filename_
   end
   
+  properties (Dependent, SetObservable)
+    Filename
+  end
+    
   properties (Dependent)
     Latitude
     Longitude
@@ -21,9 +25,12 @@ classdef activity < handle
   methods
     function act = activity(filename)
       arguments
-        filename (1,1) string = "activity-20200623-072233.mat"
+        filename (1,1) string = "";
       end
-      act.updateActivity(filename);
+      if ~isempty(filename)
+        act.Filename_ = filename;
+        act.updateActivity(filename);
+      end
     end
     
     function updateActivity(act, filename)
@@ -35,10 +42,6 @@ classdef activity < handle
       Metrics.source = [];
       Metrics.appId = [];
       act.Metrics = Metrics;
-      % Update filename once all data updated. This triggers an event so
-      % needs data to be updated first.
-      % TODO: Trigerring an event is probably more appropriate
-      act.Filename = filename;
     end
     
     function value = get.Latitude(act)
@@ -90,6 +93,14 @@ classdef activity < handle
     function value = get.DurationMS(act)
       value = act.Data.active_duration_ms;
     end
+    
+    function value = get.Filename(act)
+      value = act.Filename_;
+    end
+    
+    function set.Filename(act, filename)
+      act.Filename_ = filename;
+      act.updateActivity(filename);
+    end
   end
-  
 end
