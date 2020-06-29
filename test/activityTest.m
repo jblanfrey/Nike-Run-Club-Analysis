@@ -25,5 +25,11 @@ classdef activityTest < matlab.unittest.TestCase
       cmd = @() activity("NonExistentFile.xyz");
       verifyError(testCase, cmd, "activity:FileNotFound");
     end
+    
+%     function setErrors(testCase)
+%       act = activity;
+%       cmd = @() act, "Latitude", 0);
+%       verifyError(testCase, cmd, "MATLAB:class:SetProhibited");
+%     end
   end
 end
