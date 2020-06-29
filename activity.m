@@ -1,10 +1,10 @@
-classdef activity
+classdef activity < handle
   properties %(Access = private)
     Data
     Metrics
   end
   
-  properties
+  properties (SetObservable)
     Filename
   end
   
@@ -23,7 +23,10 @@ classdef activity
       arguments
         filename (1,1) string = "activity-20200623-072233.mat"
       end
-      act.Filename = filename;
+      act.updateActivity(filename);
+    end
+    
+    function updateActivity(act, filename)
       Data = load("data/" + filename);
       act.Data = Data.data;
       Metrics = struct2table(act.Data.metrics);
@@ -32,6 +35,10 @@ classdef activity
       Metrics.source = [];
       Metrics.appId = [];
       act.Metrics = Metrics;
+      % Update filename once all data updated. This triggers an event so
+      % needs data to be updated first.
+      % TODO: Trigerring an event is probably more appropriate
+      act.Filename = filename;
     end
     
     function value = get.Latitude(act)
