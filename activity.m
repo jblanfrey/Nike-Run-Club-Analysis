@@ -27,7 +27,7 @@ classdef activity < handle
       arguments
         filename (1,1) string = "";
       end
-      if ~isempty(filename)
+      if nargin
         if exist("data/" + filename, "file")
           act.updateActivity(filename);
           act.Filename_ = filename;
