@@ -14,8 +14,10 @@ classdef activityTest < matlab.unittest.TestCase
       verifyEqual(testCase, act.Date, []);
     end
     
-%     function
-%       
-%     end
+    function emptyConstructorUpdateFilename(testCase)
+      act = activity;
+      act.Filename = "activity-20200623-072233.mat";
+      verifyLength(testCase, act.Latitude, 570);
+    end
   end
 end
