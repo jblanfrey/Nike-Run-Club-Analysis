@@ -6,7 +6,7 @@ function saveData()
   
   %% The key keeps changing so you have to get it using development tools in Google Chrome
   %TODO: can we grab the key automatically?
-  authenticationKey = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImFlYmJkMWMyLTNjNDUtNDM5NS04MGMzLWE3YTIyMmJlOTJmMHNpZyJ9.eyJ0cnVzdCI6MTAwLCJpYXQiOjE1OTI5MTM4ODQsImV4cCI6MTU5MjkxNzQ4NCwiaXNzIjoib2F1dGgyYWNjIiwianRpIjoiYTM2NGJiMzMtODE2Ni00MzdjLTljODAtZjZiY2Q2ZjUxMTVkIiwibGF0IjoxNTkyOTEzODg0LCJhdWQiOiJjb20ubmlrZS5kaWdpdGFsIiwic3ViIjoiY29tLm5pa2UuY29tbWVyY2UubmlrZWRvdGNvbS53ZWIiLCJzYnQiOiJuaWtlOmFwcCIsInNjcCI6WyJuaWtlLmRpZ2l0YWwiXSwicHJuIjoiMTUwMjc4MTE5NTkiLCJwcnQiOiJuaWtlOnBsdXMifQ.Xp7rQmMIAa6h-R-1I1l3dYPbsVtGt1uN_AY4KoKRUdw-o2869b1bYiACDObW2TNYM0YXy2VFWv97uI-_GjTJkFkA-DqtOoNbCOWBM0kit938NigU4WrcEjOLxbAJLlhiPtQzbsBpeH3BUegRuastfD8N-5fxOfofOTbHXqUn_EbN0iC0DD9Vp3yDtXmNQSgCVlbnXDO5cktm447nE8pDbLI--nQo6yCv-yvmmEd6wOvHpiTqLxMJ6YTX-8KDNIXbbJhXMxAj2nbAkWJznXouTuxuPXvnka61rCBhl8dUgiSDWy8s9pM9wg-hP6f57SStGvlgrraVXt-tKVpBuPvM7g";
+  authenticationKey = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImFlYmJkMWMyLTNjNDUtNDM5NS04MGMzLWE3YTIyMmJlOTJmMHNpZyJ9.eyJ0cnVzdCI6MTAwLCJpYXQiOjE1OTM0NzM1NzcsImV4cCI6MTU5MzQ3NzE3NywiaXNzIjoib2F1dGgyYWNjIiwianRpIjoiZWE4MWRlN2EtOGM3OC00NjJlLTgzNTYtZTExM2U0NjFhMWMxIiwibGF0IjoxNTkzNDczNTc3LCJhdWQiOiJjb20ubmlrZS5kaWdpdGFsIiwic3ViIjoiY29tLm5pa2UuY29tbWVyY2UubmlrZWRvdGNvbS53ZWIiLCJzYnQiOiJuaWtlOmFwcCIsInNjcCI6WyJuaWtlLmRpZ2l0YWwiXSwicHJuIjoiMTUwMjc4MTE5NTkiLCJwcnQiOiJuaWtlOnBsdXMifQ.jh5gKBw5rVWeXLQwITHteuAc03Y-562KDFew8JxBdnu_MYDBiifxJbFllbqItYVjNmKQOGp--iSMGyJfR60piGH9PUexnBs8dxxVrYUqODDLafmpo4eFvhVbPHbwoa8zE8788mmqpXdBxUJpOqvZUYQ2EpPR0EklLOWL6eeGUDmkPyGrSuQdZFnfx6qcCsllvtIQHZ6D0MQ4U_AMAJX2LBHfA1gW2aoVYS_12uEAzwZDD5HoM2SeZCYPug92VCV5sqt9kjbQsjTLSzVzhatbrwbYkFTmVKiOi1AtYcH6vCR2aJRW8RCW_x_o5Wzt_SyATTsFCaDRpoxei-Vl37Entw";
   
   %%
   % This header data is used for all the requests
@@ -14,8 +14,16 @@ function saveData()
   request = matlab.net.http.RequestMessage;
   request.Header = headerData;
   
-  url = "https://api.nike.com/sport/v3/me/activities/after_time/0";
-  nextActivitiesID = saveActivities(request, url);
+  
+  if isempty(dir("data/*.mat"))
+    url = "https://api.nike.com/sport/v3/me/activities/after_time/0";
+    nextActivitiesID = saveActivities(request, url);
+  end
+  
+  % use last run as a starting point to download additional workouts
+  list = dir("data/*.mat");
+  load(list(end).name);
+  nextActivitiesID = data.id;
   
   while ~isempty(nextActivitiesID)
     url = "https://api.nike.com/sport/v3/me/activities/after_id/" + nextActivitiesID;
