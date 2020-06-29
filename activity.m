@@ -1,7 +1,7 @@
 classdef activity < handle
   properties (Access = private)
-    Data
-    Metrics
+    Data = [];
+    Metrics= [];
   end
   
   properties (Access = private)
@@ -12,7 +12,7 @@ classdef activity < handle
     Filename
   end
   
-  properties (Dependent)
+  properties (Dependent, SetAccess = private)
     Latitude
     Longitude
     Elevation
@@ -49,53 +49,81 @@ classdef activity < handle
     end
     
     function value = get.Latitude(act)
-      LatStruct = act.Metrics.values{act.Metrics.type=="latitude"};
-      value = [LatStruct(:).value];
+      if isempty(act.Metrics)
+        value = [];
+      else
+        LatStruct = act.Metrics.values{act.Metrics.type=="latitude"};
+        value = [LatStruct(:).value];
+      end
     end
     
     function value = get.Longitude(act)
-      LonStruct = act.Metrics.values{act.Metrics.type=="longitude"};
-      value = [LonStruct(:).value];
+      if isempty(act.Metrics)
+        value = [];
+      else
+        LonStruct = act.Metrics.values{act.Metrics.type=="longitude"};
+        value = [LonStruct(:).value];
+      end
     end
     
     function value = get.Elevation(act)
-      ElevStruct = act.Metrics.values{act.Metrics.type=="elevation"};
-      value = [ElevStruct(:).value];
+      if isempty(act.Metrics)
+        value = [];
+      else
+        ElevStruct = act.Metrics.values{act.Metrics.type=="elevation"};
+        value = [ElevStruct(:).value];
+      end
     end
     
     function value = get.Summary(act)
-      value = struct2table(act.Data.summaries);
-      value.metric = categorical(value.metric);
-      value.summary = categorical(value.summary);
-      value.source = [];
-      value.app_id = [];
+      if isempty(act.Metrics)
+        value = [];
+      else
+        value = struct2table(act.Data.summaries);
+        value.metric = categorical(value.metric);
+        value.summary = categorical(value.summary);
+        value.source = [];
+        value.app_id = [];
+      end
     end
     
     function value = get.NickName(act)
-      try
-        value = act.Data.tags.com_nike_name;
-      catch
+      if isempty(act.Metrics)
+        value = [];
+      else
         try
-          value = act.Data.tags.com_nike_running_goaltype;
+          value = act.Data.tags.com_nike_name;
         catch
-          value = act.Data.type;
+          try
+            value = act.Data.tags.com_nike_running_goaltype;
+          catch
+            value = act.Data.type;
+          end
         end
       end
     end
     
     function value = get.Date(act)
-      Date = char(extractAfter(act.Filename, "activity-"));
-      value = datetime(...
-        str2num(Date(1:4)),...
-        str2num(Date(5:6)),...
-        str2num(Date(7:8)),...
-        str2num(Date(10:11)),...
-        str2num(Date(12:13)),...
-        str2num(Date(14:15)));
+      if isempty(act.Metrics)
+        value = [];
+      else
+        Date = char(extractAfter(act.Filename, "activity-"));
+        value = datetime(...
+          str2num(Date(1:4)),...
+          str2num(Date(5:6)),...
+          str2num(Date(7:8)),...
+          str2num(Date(10:11)),...
+          str2num(Date(12:13)),...
+          str2num(Date(14:15)));
+      end
     end
     
     function value = get.DurationMS(act)
-      value = act.Data.active_duration_ms;
+      if isempty(act.Metrics)
+        value = [];
+      else
+        value = act.Data.active_duration_ms;
+      end
     end
     
     function value = get.Filename(act)
