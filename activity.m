@@ -28,12 +28,11 @@ classdef activity < handle
         filename (1,1) string = "";
       end
       if nargin
-        if exist("data/" + filename, "file")
-          act.updateActivity(filename);
-          act.Filename_ = filename;
-        else
-          error("File does not exist");
-        end
+        assert(exist("data/" + filename, "file") == 2, ...
+          "activity:FileNotFound", ...
+          "Unable to locate the specified file %s.", filename);
+        act.updateActivity(filename);
+        act.Filename_ = filename;
       end
     end
     
@@ -131,12 +130,11 @@ classdef activity < handle
     end
     
     function set.Filename(act, filename)
-      if exist("data/" + filename, "file")
-        act.updateActivity(filename);
-        act.Filename_ = filename;
-      else
-        error("File does not exist");
-      end
+      assert(exist("data/" + filename, "file") == 2, ...
+        "activity:FileNotFound", ...
+        "Unable to locate the specified file %s.", filename);
+      act.updateActivity(filename);
+      act.Filename_ = filename;
     end
   end
 end

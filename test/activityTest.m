@@ -19,5 +19,11 @@ classdef activityTest < matlab.unittest.TestCase
       act.Filename = "activity-20200623-072233.mat";
       verifyLength(testCase, act.Latitude, 570);
     end
+    
+    function constructorErrors(testCase)
+      % The constructor should error if the file does not exist.
+      cmd = @() activity("NonExistentFile.xyz");
+      verifyError(testCase, cmd, "activity:FileNotFound");
+    end
   end
 end
