@@ -15,6 +15,7 @@ classdef activityController < handle
       ds = fileDatastore("data", "ReadFcn",@load);
       listOfFiles = ds.Files;
       listOfFiles = extractBetween(listOfFiles, "activity-", ".mat");
+      listOfFiles = listOfFiles(end:-1:1); %reverse order
       
       controller.GridLayout = uigridlayout([1 1], "Parent", parent, "Padding", 0);
       controller.Listbox = uilistbox(controller.GridLayout, 'Items', listOfFiles, 'ValueChangedFcn', @controller.updateController);
