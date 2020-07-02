@@ -6,7 +6,7 @@ function saveData()
   
   %% The key keeps changing so you have to get it using development tools in Google Chrome
   %TODO: can we grab the key automatically?
-  authenticationKey = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImFlYmJkMWMyLTNjNDUtNDM5NS04MGMzLWE3YTIyMmJlOTJmMHNpZyJ9.eyJ0cnVzdCI6MTAwLCJpYXQiOjE1OTM2Njk3NTQsImV4cCI6MTU5MzY3MzM1NCwiaXNzIjoib2F1dGgyYWNjIiwianRpIjoiNWU0NTE0NjEtNmE5Yy00NDYxLWI0ZTUtNTc4MmM3NmZiM2Q1IiwibGF0IjoxNTkzNjY5NzU0LCJhdWQiOiJjb20ubmlrZS5kaWdpdGFsIiwic3ViIjoiY29tLm5pa2UuY29tbWVyY2UubmlrZWRvdGNvbS53ZWIiLCJzYnQiOiJuaWtlOmFwcCIsInNjcCI6WyJuaWtlLmRpZ2l0YWwiXSwicHJuIjoiMTUwMjc4MTE5NTkiLCJwcnQiOiJuaWtlOnBsdXMifQ.0C1ppgIHbddK8x8WB7rUS3V8pS66hOT7iHOHNW1jKDgMa3-6GHfZ7ULJzd0xZ-M-6CyE9xt3iCIDP-bbK6IzO8vs8yD8mLQOwmiWOmOVAnh_KUXovInJKLCHW4FiytPZBgW4KFVH-Q8V6f-vEfXIl8AuTw6imZ4nLd20uEebGKBlkHmUzUTgNxliXL7IG_qnV0NkkDQTPA249PGgNM2QS_g9LBZq9JLOXCBf12XXbLzCuuZMg3x1kZyQMpX5c18hL_n1ywCiprNV9Egxfrq88yb7sDByV8nnXfPge1nKHHIs4GN98PNs1vseQl0EtE6v3ijFWlKsqX3is4ZeCXvg4Q";
+  authenticationKey = ""; % put your key here
   
   %%
   % This header data is used for all the requests
