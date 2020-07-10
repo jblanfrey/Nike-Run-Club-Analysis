@@ -16,6 +16,7 @@ classdef activity < handle
     Latitude
     Longitude
     Elevation
+    Time
     Summary
     NickName
     DurationMS
@@ -74,6 +75,16 @@ classdef activity < handle
       end
     end
     
+    function value = get.Time(act)
+      if isempty(act.Metrics)
+        value = [];
+      else
+        TimeStruct = act.Metrics.values{act.Metrics.type=="latitude"};
+        value = datetime([TimeStruct(:).start_epoch_ms]./1000, 'ConvertFrom','posixtime');
+      end
+      
+    end
+    
     function value = get.Summary(act)
       if isempty(act.Metrics)
         value = [];
@@ -106,14 +117,8 @@ classdef activity < handle
       if isempty(act.Metrics)
         value = [];
       else
-        Date = char(extractAfter(act.Filename, "activity-"));
-        value = datetime(...
-          str2num(Date(1:4)),...
-          str2num(Date(5:6)),...
-          str2num(Date(7:8)),...
-          str2num(Date(10:11)),...
-          str2num(Date(12:13)),...
-          str2num(Date(14:15)));
+        d = datetime(act.Data.start_epoch_ms/1000,'ConvertFrom','posixtime','TimeZone','Australia/Sydney');
+        value = d;
       end
     end
     
