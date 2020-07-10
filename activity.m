@@ -36,7 +36,9 @@ classdef activity < handle
         act.Filename_ = filename;
       end
     end
-    
+  end % Constructor
+  
+  methods
     function updateActivity(act, filename)
       Data = load("data/" + filename);
       act.Data = Data.data;
@@ -47,7 +49,9 @@ classdef activity < handle
       Metrics.appId = [];
       act.Metrics = Metrics;
     end
-    
+  end % updateActivity when the filename is changed
+  
+  methods
     function value = get.Latitude(act)
       if isempty(act.Metrics)
         value = [];
@@ -140,6 +144,52 @@ classdef activity < handle
         "Unable to locate the specified file %s.", filename);
       act.updateActivity(filename);
       act.Filename_ = filename;
+    end
+  end % getter and setter
+  
+  methods
+    function exportToGPX(act)
+      docNode = com.mathworks.xml.XMLUtils.createDocument('gpx');
+      
+      gpx = docNode.getDocumentElement;
+      gpx.setAttribute('version','1.1');
+      gpx.setAttribute('creator','JB');
+      
+      trk = docNode.createElement('trk');
+      gpx.appendChild(trk);
+      
+      name = docNode.createElement('name');
+      nameText = docNode.createTextNode(act.NickName);
+      name.appendChild(nameText);
+      trk.appendChild(name);
+      
+      trkseg = docNode.createElement('trkseg');
+      trk.appendChild(trkseg);
+      
+      Date = act.Time;
+      Date.Format = 'uuuu-MM-dd';
+      Time = act.Time;
+      Time.Format = 'HH:mm:ss';
+      text = string(Date) + "T" + string(Time) + "Z";
+      
+      for k=1:numel(act.Latitude)
+        trkpt = docNode.createElement('trkpt');
+        trkpt.setAttribute('lat', string(act.Latitude(k)));
+        trkpt.setAttribute('lon', string(act.Longitude(k)));
+        trkseg.appendChild(trkpt);
+        
+        ele = docNode.createElement('ele');
+        eleText = docNode.createTextNode(string(act.Elevation(k)));
+        ele.appendChild(eleText);
+        trkpt.appendChild(ele);
+        
+        time = docNode.createElement('time');
+        timeText = docNode.createTextNode(text(k));
+        time.appendChild(timeText);
+        trkpt.appendChild(time);
+      end
+      
+      xmlwrite(extractBefore(act.Filename,".mat") + '.xml',docNode);
     end
   end
 end
