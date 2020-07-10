@@ -189,7 +189,7 @@ classdef activity < handle
         trkpt.appendChild(time);
       end
       
-      xmlwrite(extractBefore(act.Filename,".mat") + '.xml',docNode);
+      xmlwrite(extractBefore(act.Filename,".mat") + '.gpx',docNode);
     end
-  end
+  end % exportToGPX
 end
