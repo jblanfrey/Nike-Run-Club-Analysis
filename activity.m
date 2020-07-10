@@ -174,12 +174,12 @@ classdef activity < handle
       
       for k=1:numel(act.Latitude)
         trkpt = docNode.createElement('trkpt');
-        trkpt.setAttribute('lat', string(act.Latitude(k)));
-        trkpt.setAttribute('lon', string(act.Longitude(k)));
+        trkpt.setAttribute('lat', num2str(act.Latitude(k),'%.50f'));
+        trkpt.setAttribute('lon', num2str(act.Longitude(k),'%.50f'));
         trkseg.appendChild(trkpt);
         
         ele = docNode.createElement('ele');
-        eleText = docNode.createTextNode(string(act.Elevation(k)));
+        eleText = docNode.createTextNode(num2str(act.Elevation(k),'%.50f'));
         ele.appendChild(eleText);
         trkpt.appendChild(ele);
         
