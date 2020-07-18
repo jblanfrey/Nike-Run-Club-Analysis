@@ -2,6 +2,7 @@ classdef activitySummaryViewer < activityViewer
   %ACTIVITYSUMMARYVIEWER Displays NRC activity summary
   
   properties
+    GridLayout
     Title
     Label
   end
@@ -9,6 +10,8 @@ classdef activitySummaryViewer < activityViewer
   methods
     function view = activitySummaryViewer(parent, act)
       view = view@activityViewer(parent, act);
+      
+      view.GridLayout = uigridlayout(view.Parent, [2, 1]);
       
       Title = uilabel(view.GridLayout);
       Title.Layout.Row = 1;

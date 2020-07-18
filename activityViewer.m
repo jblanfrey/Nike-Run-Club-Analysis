@@ -2,9 +2,9 @@ classdef activityViewer < handle
   %ACTIVITYVIEWER Super Class - Viewer
   
   properties (Access = protected)
+    Parent
     Activity
     FileListener
-    GridLayout
   end
   
   methods
@@ -16,8 +16,8 @@ classdef activityViewer < handle
       % Model
       view.Activity = act;
       
-      % Graphics
-      view.GridLayout = uigridlayout([2 1], "Parent", parent);
+      % Parent
+      view.Parent = parent;
       
       % Listener
       view.FileListener = listener(act, "Filename", "PostSet", @view.updateView);
